@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>DALLE 2 API Image Generator</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<style>
+		.container {
+			margin-top: 50px;
+			text-align: center;
+		}
+		.form-group {
+			margin-top: 20px;
+		}
+		#generated-image {
+			margin-top: 20px;
+			max-width: 100%;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<h1>DALLE 2 API Image Generator</h1>
+		<p>Enter some text and click "Generate" to create an image:</p>
+		<div class="form-group">
+			<label for="input-text">Input Text:</label>
+			<input type="text" class="form-control" id="input-text" placeholder="Enter some text...">
+		</div>
+		<button type="button" class="btn btn-primary" onclick="generateImage()">Generate</button>
+		<div id="generated-image">
+			<img id="image" src="" alt="Generated Image">
+		</div>
+	</div>
+	<script>
+		function generateImage() {
+			// Get the input text
+			var inputText = document.getElementById("input-text").value;
+
+			// Send a request to the backend to generate an image
+			fetch('/generate-image', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded'
+				},
+				body: 'input-text=' + encodeURIComponent(inputText)
+			})
+			.then(response => response.json())
+			.then(data => {
+				// Display the generated image
+				document.getElementById("image").src = data.image_url;
+			})
+			.catch(error => {
+				console.error(error);
+				alert('An error occurred while generating the image. Please try again.');
+			});
+		}
+	</script>
+</body>
+</html>
